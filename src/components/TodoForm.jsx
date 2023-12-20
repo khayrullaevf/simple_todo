@@ -4,11 +4,12 @@ import { addTodo } from "../slices/todoSlice";
 
 const TodoForm = () => {
   const [text, setText] = useState("");
+  const [time, setTime] = useState("");
   const dispatch = useDispatch();
 
   const handleAddTodo = (e) => {
     e.preventDefault()
-    dispatch(addTodo(text));
+    dispatch(addTodo({text,time}));
     setText("");
     e.target.reset();
   };
@@ -22,7 +23,16 @@ const TodoForm = () => {
         required
         className="form-control"
       />
-      <button className="btn btn-primary" type="submit">add</button>
+      <input
+        type="time"
+        placeholder="When?"
+        onChange={(e) => setTime(e.target.value)}
+        required
+        className="form-control"
+      />
+      <button className="btn btn-primary" type="submit">
+        add
+      </button>
     </form>
   );
 };

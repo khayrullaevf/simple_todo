@@ -13,11 +13,18 @@ const TodoList = () => {
           className="list-group-item primary d-flex justify-content-between"
           key={todo.id}
         >
-          <h3 className="text text-primary">
-            {index + 1}.
-            {todo.text}
-          </h3>
-          <button className="btn btn-danger" onClick={() => dispatch(deleteTodo(todo.id))}>Delete</button>
+          <div className="d-flex align-items-center gap-2">
+            <h3 className="text text-primary ">
+              {index + 1}.{todo.text}
+            </h3>
+            <span className="fs-5 text-danger">{todo.time}</span>
+          </div>
+          <button
+            className="btn btn-danger"
+            onClick={() => dispatch(deleteTodo(todo.id))}
+          >
+            Delete
+          </button>
         </li>
       ))}
     </ul>
