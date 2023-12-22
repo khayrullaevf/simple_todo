@@ -5,6 +5,8 @@ import { addTodo } from "../slices/todoSlice";
 const TodoForm = () => {
   const [text, setText] = useState("");
   const [time, setTime] = useState("");
+ 
+
   const dispatch = useDispatch();
 
   const handleAddTodo = (e) => {
@@ -13,6 +15,14 @@ const TodoForm = () => {
     setText("");
     e.target.reset();
   };
+
+
+
+
+
+
+
+
 
   return (
     <form onSubmit={handleAddTodo} className="form d-flex gap-3">

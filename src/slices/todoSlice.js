@@ -31,14 +31,21 @@ const todoSlice = createSlice({
       state.push(newTodo);
       saveTodosToLocalStorage(state);
     },
-    deleteTodo: (state, action) => {
+    removeTodo: (state, action) => {
       const filteredTodos = state.filter((todo) => todo.id !== action.payload);
       saveTodosToLocalStorage(filteredTodos);
       return filteredTodos;
+    },
+    updateStatus:(state, action)=>{
+      const updateAt = new Date().toLocaleString();
+      const updateStatusState=state.map((todo) =>
+        todo.id === action.payload?.id ? { ...todo, isDone: true, updateAt } : todo
+      );
+      saveTodosToLocalStorage(updateStatusState);
     },
   },
 });
 
 
-export const{addTodo,deleteTodo}=todoSlice.actions
+export const{addTodo,removeTodo,updateStatus}=todoSlice.actions
 export default todoSlice.reducer
