@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { removeTodo} from "../slices/todoSlice";
-import { Button, Modal } from "react-bootstrap";
+import { removeTodo, updateStatus,editTodo} from "../slices/todoSlice";
+import { Badge, Button, Modal, Table } from "react-bootstrap";
+import { FaCheck, FaTimes } from "react-icons/fa";
 
 const TodoList = () => {
   const todos = useSelector((state) => state.todos);
 
-     const [show, setShow] = useState(true);
+     const [show, setShow] = useState(false);
      const [deleteTodo, setDeleteTodo] = useState(null);
      const dispatch = useDispatch();
 
@@ -20,37 +21,87 @@ const TodoList = () => {
        setShow(false);
      };
 
+
+     const handleUpdateStatus = (id) => {
+       dispatch(updateStatus({ id }));
+     };
+
   return (
-    <ul className="list-group mt-3">
-      {todos.map((todo, index) => (
-        <li
-          className="list-group-item primary d-flex justify-content-between"
-          key={todo.id}
-        >
-          <div className="d-flex align-items-center gap-2">
-            <h3 className="text text-primary ">
-              {index + 1}.{todo.text}
-            </h3>
-            <span className="fs-5 text-danger">{todo.time}</span>
-          </div>
-          <button className="btn btn-danger" onClick={()=>handleClickRemove(todo.id)}>Delete</button>
-        </li>
-      ))}
-     <Modal show={show} onHide={() => setShow(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Remove todo ?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Siz haqiqatdan ham bu item ni uchirmoqchimisiz?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)}>
-            close
-          </Button>
-          <Button variant="primary" onClick={handleRemove}>
-            ok
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </ul>
+    <Table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th colSpan={2}>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {todos.map((todo, index) => {
+          console.log(todo);
+          return (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>
+                <p className={`todo-item${todo.isDone && "done"}`}>
+                  {todo.text}
+                </p>
+                <Badge bg="secondary">{todo.createAt}</Badge>
+              </td>
+              <td>
+                <Badge bg={`${todo.isDone ? "success" : "danger"}`}>
+                  {todo.isDone ? "done" : "pending"}
+                </Badge>
+                {todo.isDone && <p>{todo.updateAt}</p>}
+                {!todo.isDone && <p>untill: {todo.time}</p>}
+              </td>
+              {!todo.isDone && (
+                <td>
+                  <div
+                    style={{ color: "green" }}
+                    onClick={() => handleUpdateStatus(todo.id)}
+                  >
+                    <FaCheck />
+                  </div>
+                </td>
+              )}
+
+              <td colSpan={todo.isDone ? 2 : 1}>
+                <div
+                  style={{ color: "red" }}
+                  onClick={() => handleClickRemove(todo.id)}
+                >
+                  <FaTimes />
+                </div>
+
+                {/* <button
+                  className="btn btn-danger"
+                  onClick={() => handleClickRemove(todo.id)}
+                >
+                  Delete
+                </button> */}
+              </td>
+            </tr>
+          );
+        })}
+        <Modal show={show} onHide={() => setShow(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Remove todo ?</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Siz haqiqatdan ham bu item ni uchirmoqchimisiz?
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShow(false)}>
+              close
+            </Button>
+            <Button variant="primary" onClick={handleRemove}>
+              ok
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </tbody>
+    </Table>
   );
 };
 

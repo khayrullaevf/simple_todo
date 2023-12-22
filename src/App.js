@@ -4,12 +4,6 @@ import TodoForm from "./components/TodoForm";
 
 
 function App() {
-
-
-
-
-
-
   return (
     <>
       <div className='d-flex justify-content-center align-items-center p-5'>

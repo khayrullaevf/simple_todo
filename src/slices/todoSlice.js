@@ -27,6 +27,8 @@ const todoSlice = createSlice({
         id: state.length + 1,
         text: action.payload.text,
         time: action.payload.time,
+        isDone: false,
+        createAt: new Date().toLocaleString(),
       };
       state.push(newTodo);
       saveTodosToLocalStorage(state);
@@ -36,16 +38,23 @@ const todoSlice = createSlice({
       saveTodosToLocalStorage(filteredTodos);
       return filteredTodos;
     },
-    updateStatus:(state, action)=>{
+    updateStatus: (state, action) => {
+      const { id } = action.payload;
       const updateAt = new Date().toLocaleString();
-      const updateStatusState=state.map((todo) =>
-        todo.id === action.payload?.id ? { ...todo, isDone: true, updateAt } : todo
-      );
-      saveTodosToLocalStorage(updateStatusState);
+
+      // Find the index of the todo to update
+      const todoIndex = state.findIndex((todo) => todo.id === id);
+
+      // Update the todo if found
+      if (todoIndex !== -1) {
+        state[todoIndex] = { ...state[todoIndex], isDone: true, updateAt };
+        saveTodosToLocalStorage(state);
+      }
     },
+   
   },
 });
 
 
-export const{addTodo,removeTodo,updateStatus}=todoSlice.actions
+export const{addTodo,removeTodo,updateStatus,}=todoSlice.actions
 export default todoSlice.reducer
